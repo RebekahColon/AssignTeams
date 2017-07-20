@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26711.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignTeams", "AssignTeams\AssignTeams.csproj", "{04FDB46B-0737-4D75-B7E7-DFF541073CC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignTeams", "AssignTeams\AssignTeams.csproj", "{04FDB46B-0737-4D75-B7E7-DFF541073CC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
