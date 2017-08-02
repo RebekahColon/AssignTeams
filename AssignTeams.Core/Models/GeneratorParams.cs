@@ -9,5 +9,6 @@ namespace AssignTeams.Core.Models
         public IList<Associate> Associates { get; set; }
         public int NumberOfTeams { get; set; }
         public int AssociatesPerTeam { get; set; }
+        public RandomizeBy RandomizeBy { get; set; }
     }
 }

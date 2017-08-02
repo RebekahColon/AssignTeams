@@ -8,37 +8,58 @@ namespace AssignTeams.Core
 {
     public class TeamGeneratorService : ITeamGeneratorService
     {
-        private readonly Random _randomizer;
+        private readonly Random _randomNumber;
         public TeamGeneratorService()
         {
-            _randomizer = new Random();
+            _randomNumber = new Random();
         }
 
         public IEnumerable<Team> Run(GeneratorParams parameters)
         {
+            // TODO: Add Fail fast checks
+            // 1. Divide by zero based on the randomizer
+            // 2. The below check if selection is number of teams
+            //if (parameters.Associates.Count < parameters.NumberOfTeams)
+            //    throw new ArgumentException("There are not enough team members provided for the number of teams requested.");
+
+            int totalPeopleProvided = parameters.Associates.Count;
+            int totalNumberOfTeams;
+
+            // Determine number of teams based on randomizer
+            switch (parameters.RandomizeBy)
+            {
+                case RandomizeBy.PeoplePerTeam:
+                    totalNumberOfTeams = totalPeopleProvided / parameters.AssociatesPerTeam;
+                    break;
+                case RandomizeBy.TotalNumberOfTeams:
+                default:
+                    totalNumberOfTeams = parameters.NumberOfTeams;
+                    break;
+            }
+
             // Create team objects and set the team numbers based on players per team
             List<Team> teams = new List<Team>();
-            for (int i = 0; i < parameters.NumberOfTeams; i++)
+            for (int i = 0; i < totalNumberOfTeams; i++)
             {
                 teams.Add(new Team() { Number = i + 1 });
             }
 
-            // Use max number of teams and associates per team to create the number of team number selections
+            // Create the assignable list of teams based on the number of teams and number of people provided to split into the teams
             List<int> availableTeamNumbers = new List<int>();
-            for (int i = 0; i < parameters.AssociatesPerTeam; i++)
+            int teamNumber = 1;
+            for (int i = 0; i < totalPeopleProvided; i++)
             {
-                for (int j = 0; j < parameters.NumberOfTeams; j++)
-                {
-                    availableTeamNumbers.Add(j + 1);
-                }
+                availableTeamNumbers.Add(teamNumber);
+                teamNumber++;
+                if (teamNumber == totalNumberOfTeams)
+                    teamNumber = 1; //reset the team number
             }
 
             // Randomly assign an associate to a team
-            int numberToLoop = parameters.NumberOfTeams * parameters.AssociatesPerTeam;
-            for (int i = 0; i < numberToLoop; i++)
+            for (int i = 0; i < totalPeopleProvided; i++)
             {
                 // Generate a team number at random out of the available teams remaining, then remove that item from future draws
-                int randomIndex = _randomizer.Next(0, availableTeamNumbers.Count);
+                int randomIndex = _randomNumber.Next(0, availableTeamNumbers.Count);
                 Team team = teams.FirstOrDefault(t => t.Number == availableTeamNumbers[randomIndex]);
                 availableTeamNumbers.RemoveAt(randomIndex);
 
