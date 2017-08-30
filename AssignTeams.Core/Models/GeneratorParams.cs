@@ -10,5 +10,10 @@ namespace AssignTeams.Core.Models
         public int NumberOfTeams { get; set; }
         public int AssociatesPerTeam { get; set; }
         public RandomizeBy RandomizeBy { get; set; }
+
+        public GeneratorParams()
+        {
+            Associates = new List<Associate>();
+        }
     }
 }
