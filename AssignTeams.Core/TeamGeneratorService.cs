@@ -9,7 +9,7 @@ namespace AssignTeams.Core
     public enum RandomizeBy
     {
         TotalNumberOfTeams,
-        PeoplePerTeam
+        MaximumPeoplePerTeam
     }
 
     public class TeamGeneratorService : ITeamGeneratorService
@@ -24,23 +24,23 @@ namespace AssignTeams.Core
         public IEnumerable<Team> Run(GeneratorParams parameters)
         {
             // Guard clauses
-            if(parameters == null) throw new ArgumentNullException("The parameters provided to generate teams is null.");
-            if(parameters.Associates == null) throw new ArgumentNullException("The associates to generate into teams is null.");
-            if(parameters.Associates.Count == 0) throw new ArgumentException("There are no associates to generate into teams.");
+            if(parameters == null) throw new ArgumentNullException("The parameters required to generate random teams is null.");
+            if(parameters.People == null) throw new ArgumentNullException("The list of people to generate into teams is null.");
+            if(parameters.People.Count == 0) throw new ArgumentException("There are no people to generate into teams.");
 
-            int totalPeopleProvided = parameters.Associates.Count;
+            int totalPeopleProvided = parameters.People.Count;
             int totalNumberOfTeams;
             switch (parameters.RandomizeBy)
             {
-                case RandomizeBy.PeoplePerTeam:
-                    if(parameters.AssociatesPerTeam == 0) throw new ArgumentException($"The number of people per team cannot be 0 {generateTypeMessage}.");
-                    totalNumberOfTeams = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(totalPeopleProvided) / Convert.ToDecimal(parameters.AssociatesPerTeam)));
+                case RandomizeBy.MaximumPeoplePerTeam:
+                    if(parameters.MaximumPeoplePerTeam == 0) throw new ArgumentException($"The number of people per team cannot be 0 {generateTypeMessage}.");
+                    totalNumberOfTeams = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(totalPeopleProvided) / Convert.ToDecimal(parameters.MaximumPeoplePerTeam)));
                     break;
                 case RandomizeBy.TotalNumberOfTeams:
                 default:
-                    if (parameters.NumberOfTeams == 0) throw new ArgumentException($"The number of teams cannot be 0 {generateTypeMessage}.");
-                    if (parameters.Associates.Count < parameters.NumberOfTeams) throw new ArgumentException("There are not enough team members provided for the number of teams requested.");
-                    totalNumberOfTeams = parameters.NumberOfTeams;
+                    if (parameters.TotalNumberOfTeams == 0) throw new ArgumentException($"The number of teams cannot be 0 {generateTypeMessage}.");
+                    if (parameters.People.Count < parameters.TotalNumberOfTeams) throw new ArgumentException("There are not enough people provided for the number of teams requested.");
+                    totalNumberOfTeams = parameters.TotalNumberOfTeams;
                     break;
             }
 
@@ -51,7 +51,7 @@ namespace AssignTeams.Core
                 teams.Add(new Team() { Number = i + 1 });
             }
 
-            // Create the assignable list of teams based on the number of teams and people provided to split into the teams
+            // Create a list of team numbers available for randomly assigning to each person
             List<int> availableTeamNumbers = new List<int>();
             int currentTeamNumber = 1;
             for (int i = 0; i < totalPeopleProvided; i++)
@@ -63,23 +63,25 @@ namespace AssignTeams.Core
                 currentTeamNumber++;
             }
 
-            // Randomly assign an associate to a team
+            // Randomly assign a person to a team
             for (int i = 0; i < totalPeopleProvided; i++)
             {
                 // Generate a team number at random out of the available teams remaining 
                 int randomIndex = _randomNumber.Next(0, availableTeamNumbers.Count);
                 Team team = teams.FirstOrDefault(t => t.Number == availableTeamNumbers[randomIndex]);
+
+                // If for some reason team is null, stop processing
                 if (team == null) throw new Exception("There was an error creating your teams.  Please try again later.");
 
-                // Assign the current associate to that team 
-                team.Members.Add(parameters.Associates[0]);
+                // Assign the current person to randomly selected team 
+                team.People.Add(parameters.People[0]);
 
-                // Then remove that associate and team number occurrence from future draws
-                parameters.Associates.RemoveAt(0);
+                // Then remove that person and team number occurrence from future draws
+                parameters.People.RemoveAt(0);
                 availableTeamNumbers.RemoveAt(randomIndex);
 
-                // Break out if there are no more team members to assign
-                if (parameters.Associates.Count == 0)
+                // Break out if there are no more people to assign to a team
+                if (parameters.People.Count == 0)
                     break;
             }
 

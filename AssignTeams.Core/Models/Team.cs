@@ -8,11 +8,11 @@ namespace AssignTeams.Core.Models
     public class Team
     {
         public int Number { get; set; }
-        public List<Associate> Members { get; set; }
+        public List<Person> People { get; set; }
 
         public Team()
         {
-            Members = new List<Associate>();
+            People = new List<Person>();
         }
     }
 }

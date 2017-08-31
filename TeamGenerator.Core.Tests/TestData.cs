@@ -7,21 +7,21 @@ namespace AssignTeams.Core.UnitTests
 {
     public class TestData
     {
-        public static List<Associate> NineAssociates
+        public static List<Person> NinePeople
         {
             get
             {
-                return new List<Associate>()
+                return new List<Person>()
                 {
-                    new Associate {Name = "Sarah"},
-                    new Associate {Name = "Abraham"},
-                    new Associate {Name = "Isaac"},
-                    new Associate {Name = "Rebekah"},
-                    new Associate {Name = "Rachel"},
-                    new Associate {Name = "Jacob"},
-                    new Associate {Name = "Noah"},
-                    new Associate {Name = "David"},
-                    new Associate {Name = "Ruth"}
+                    new Person {Name = "Sarah"},
+                    new Person {Name = "Abraham"},
+                    new Person {Name = "Isaac"},
+                    new Person {Name = "Rebekah"},
+                    new Person {Name = "Rachel"},
+                    new Person {Name = "Jacob"},
+                    new Person {Name = "Noah"},
+                    new Person {Name = "David"},
+                    new Person {Name = "Ruth"}
                 };
             }
         }

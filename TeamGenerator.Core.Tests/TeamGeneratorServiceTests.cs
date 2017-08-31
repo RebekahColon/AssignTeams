@@ -9,7 +9,6 @@ namespace AssignTeams.Core.UnitTests
     public class TeamGeneratorServiceTests
     {
         private readonly ITeamGeneratorService _generator;
-        private GeneratorParams _params;
         private List<Team> _createdTeams;
 
         public TeamGeneratorServiceTests()
@@ -18,84 +17,83 @@ namespace AssignTeams.Core.UnitTests
         }
 
         [Fact]
-        public void GeneratesSameNumberOfTeamsAsAssociatesWhenMaxPeoplePerTeamIsOne()
+        public void GeneratesSameNumberOfTeamsAsPeopleWhenMaxPeoplePerTeamIsOne()
         {
             // Arrange
             int maxPeoplePerTeam = 1;
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        AssociatesPerTeam = maxPeoplePerTeam,
-                        Associates = TestData.NineAssociates,
-                        RandomizeBy = RandomizeBy.PeoplePerTeam
+                        MaximumPeoplePerTeam = maxPeoplePerTeam,
+                        People = TestData.NinePeople,
+                        RandomizeBy = RandomizeBy.MaximumPeoplePerTeam
                     };
-            int expectedNumberOfTeams = _params.Associates.Count;
+            int expectedNumberOfTeams = userOptions.People.Count;
 
             // Act
-            _createdTeams = _generator.Run(_params).ToList();
+            _createdTeams = _generator.Run(userOptions).ToList();
 
             // Assert
             Assert.Equal(expectedNumberOfTeams, _createdTeams.Count);
         }
 
         [Fact]
-        public void GeneratesEvenTeamSizesWhenNumberOfAssociatesIsDivisibleByMaxPeoplePerTeam()
+        public void GeneratesEvenTeamSizesWhenNumberOfPeoplesIsDivisibleByMaxPeoplePerTeam()
         {
             // Arrange
             int maxPeoplePerTeam = 3;
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        AssociatesPerTeam = maxPeoplePerTeam,
-                        Associates = TestData.NineAssociates,
-                        RandomizeBy = RandomizeBy.PeoplePerTeam
+                        MaximumPeoplePerTeam = maxPeoplePerTeam,
+                        People = TestData.NinePeople,
+                        RandomizeBy = RandomizeBy.MaximumPeoplePerTeam
                     };
-            int expectedNumberOfTeams = _params.Associates.Count / maxPeoplePerTeam;
+            int expectedNumberOfTeams = userOptions.People.Count / maxPeoplePerTeam;
 
             // Act
-            _createdTeams = _generator.Run(_params).ToList();
+            _createdTeams = _generator.Run(userOptions).ToList();
 
             // Assert
             Assert.Equal(expectedNumberOfTeams, _createdTeams.Count);
-            Assert.Equal(maxPeoplePerTeam, _createdTeams[0].Members.Count);
-            Assert.Equal(maxPeoplePerTeam, _createdTeams[1].Members.Count);
-            Assert.Equal(maxPeoplePerTeam, _createdTeams[2].Members.Count);
+            Assert.Equal(maxPeoplePerTeam, _createdTeams[0].People.Count);
+            Assert.Equal(maxPeoplePerTeam, _createdTeams[1].People.Count);
+            Assert.Equal(maxPeoplePerTeam, _createdTeams[2].People.Count);
         }
 
         [Theory]
         [InlineData(2,5)]
         [InlineData(5,2)]
         [InlineData(4,3)]
-        public void GeneratesNumberOfTeamsRoundedToNextWholeNumberWhenNumberOfAssociatesIsNotDivisibleByMaxPeoplePerTeam(int maxPeoplePerTeam, int expectedNumberOfTeams)
+        public void GeneratesTeamsRoundedToNextWholeNumberWhenNumberOfPeopleIsNotDivisibleByMaxPeoplePerTeam(int maxPeoplePerTeam, int expectedNumberOfTeams)
         {
             // Arrange
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
             {
-                AssociatesPerTeam = maxPeoplePerTeam,
-                Associates = TestData.NineAssociates,
-                RandomizeBy = RandomizeBy.PeoplePerTeam
+                MaximumPeoplePerTeam = maxPeoplePerTeam,
+                People = TestData.NinePeople,
+                RandomizeBy = RandomizeBy.MaximumPeoplePerTeam
             };
 
             // Act
-            _createdTeams = _generator.Run(_params).ToList();
+            _createdTeams = _generator.Run(userOptions).ToList();
 
             // Assert
             Assert.Equal(expectedNumberOfTeams, _createdTeams.Count);
         }
-
 
         [Fact]
         public void GeneratesOneTeamWhenNumberOfTeamsIsOne()
         {
             // Arrange
             int expectedNumberOfTeams = 1;
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        NumberOfTeams = expectedNumberOfTeams,
-                        Associates = TestData.NineAssociates,
+                        TotalNumberOfTeams = expectedNumberOfTeams,
+                        People = TestData.NinePeople,
                         RandomizeBy = RandomizeBy.TotalNumberOfTeams
                     };
 
             // Act
-            _createdTeams = _generator.Run(_params).ToList();
+            _createdTeams = _generator.Run(userOptions).ToList();
 
             // Assert
             Assert.Equal(expectedNumberOfTeams, _createdTeams.Count);
@@ -106,18 +104,18 @@ namespace AssignTeams.Core.UnitTests
         {
             // Arrange
             int numberOfTeams = 2;
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        NumberOfTeams = numberOfTeams,
-                        Associates = TestData.NineAssociates,
+                        TotalNumberOfTeams = numberOfTeams,
+                        People = TestData.NinePeople,
                         RandomizeBy = RandomizeBy.TotalNumberOfTeams
                     };
-            int expectedTotalNumberOfPeople = _params.Associates.Count;
+            int expectedTotalNumberOfPeople = userOptions.People.Count;
 
             // Act
-            _createdTeams = _generator.Run(_params).ToList();
-            int teamOneCount = _createdTeams[0].Members.Count;
-            int teamTwoCount = _createdTeams[1].Members.Count;
+            _createdTeams = _generator.Run(userOptions).ToList();
+            int teamOneCount = _createdTeams[0].People.Count;
+            int teamTwoCount = _createdTeams[1].People.Count;
 
             // Assert
             Assert.NotEqual(teamOneCount, teamTwoCount);
@@ -129,22 +127,22 @@ namespace AssignTeams.Core.UnitTests
         {
             // Arrange
             int expectedNumberOfTeams = 3;
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        NumberOfTeams = expectedNumberOfTeams,
-                        Associates = TestData.NineAssociates,
+                        TotalNumberOfTeams = expectedNumberOfTeams,
+                        People = TestData.NinePeople,
                         RandomizeBy = RandomizeBy.TotalNumberOfTeams
                     };
-            int expectedPeoplePerTeam = _params.Associates.Count/expectedNumberOfTeams;
+            int expectedPeoplePerTeam = userOptions.People.Count/expectedNumberOfTeams;
 
             // Act
-            _createdTeams = _generator.Run(_params).ToList();
+            _createdTeams = _generator.Run(userOptions).ToList();
 
             // Assert
             Assert.Equal(expectedNumberOfTeams, _createdTeams.Count);
-            Assert.Equal(expectedPeoplePerTeam, _createdTeams[0].Members.Count);
-            Assert.Equal(expectedPeoplePerTeam, _createdTeams[1].Members.Count);
-            Assert.Equal(expectedPeoplePerTeam, _createdTeams[2].Members.Count);
+            Assert.Equal(expectedPeoplePerTeam, _createdTeams[0].People.Count);
+            Assert.Equal(expectedPeoplePerTeam, _createdTeams[1].People.Count);
+            Assert.Equal(expectedPeoplePerTeam, _createdTeams[2].People.Count);
         }
 
         [Fact]
@@ -152,82 +150,82 @@ namespace AssignTeams.Core.UnitTests
         {
             // Arrange
             int expectedNumberOfTeams = 9;
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        NumberOfTeams = expectedNumberOfTeams,
-                        Associates = TestData.NineAssociates,
+                        TotalNumberOfTeams = expectedNumberOfTeams,
+                        People = TestData.NinePeople,
                         RandomizeBy = RandomizeBy.TotalNumberOfTeams
                     };
-            int expectedPeoplePerTeam = _params.Associates.Count / expectedNumberOfTeams;
+            int expectedPeoplePerTeam = userOptions.People.Count / expectedNumberOfTeams;
 
             // Act
-            _createdTeams = _generator.Run(_params).ToList();
+            _createdTeams = _generator.Run(userOptions).ToList();
 
             // Assert
             Assert.Equal(expectedNumberOfTeams, _createdTeams.Count);
-            Assert.Equal(expectedPeoplePerTeam, _createdTeams[0].Members.Count);
+            Assert.Equal(expectedPeoplePerTeam, _createdTeams[0].People.Count);
         }
 
         [Fact]
-        public void GeneratesExceptionWhenParametersIsNull()
+        public void GeneratesExceptionWhenGeneratorParametersIsNull()
         {
+            // Arrange
+            GeneratorParams userOptions = null;
+
             // Act
-            var ex = Record.Exception(() => _generator.Run(_params));
+            var ex = Record.Exception(() => _generator.Run(userOptions));
 
             // Assert
             Assert.NotNull(ex);
             Assert.IsType<ArgumentNullException>(ex);
-            Assert.True(ex.Message.Contains("The parameters provided to generate teams is null."));
+            Assert.True(ex.Message.Contains("The parameters required to generate random teams is null."));
         }
 
         [Fact]
-        public void GeneratesExceptionWhenAssociatesIsNull()
+        public void GeneratesExceptionWhenListOfPeopleIsNull()
         {
             // Arrange
-            _params = new GeneratorParams
-                    {
-                        Associates = null,
-                    };
+            GeneratorParams userOptions = new GeneratorParams { People = null };
 
             // Act
-            var ex = Record.Exception(() => _generator.Run(_params));
+            var ex = Record.Exception(() => _generator.Run(userOptions));
 
             // Assert
             Assert.NotNull(ex);
             Assert.IsType<ArgumentNullException>(ex);
-            Assert.True(ex.Message.Contains("The associates to generate into teams is null."));
+            Assert.True(ex.Message.Contains("The list of people to generate into teams is null."));
         }
 
         [Fact]
-        public void GeneratesExceptionWhenAssociatesCountIsZero()
+        public void GeneratesExceptionWhenListOfPeopleCountIsZero()
         {
             // Arrange
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        Associates = new List<Associate>(),
+                        People = new List<Person>(),
                     };
 
             // Act
-            var ex = Record.Exception(() => _generator.Run(_params));
+            var ex = Record.Exception(() => _generator.Run(userOptions));
 
             // Assert
             Assert.NotNull(ex);
             Assert.IsType<ArgumentException>(ex);
-            Assert.Equal(ex.Message, "There are no associates to generate into teams.");
+            Assert.Equal(ex.Message, "There are no people to generate into teams.");
         }
 
         [Fact]
-        public void GeneratesExceptionWhenNumberOfAssociatesPerTeamIsZeroForRequestByAssociatesPerTeam()
+        public void GeneratesExceptionWhenMaximumPeoplePerTeamIsZeroForRequestByPeoplePerTeam()
         {
             // Arrange
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
                     {
-                        Associates = TestData.NineAssociates,
-                        RandomizeBy = RandomizeBy.PeoplePerTeam
+                        People = TestData.NinePeople,
+                        RandomizeBy = RandomizeBy.MaximumPeoplePerTeam
                     };
 
             // Act
-            var ex = Record.Exception(() => _generator.Run(_params));
+            var ex = Record.Exception(() => _generator.Run(userOptions));
 
             // Assert
             Assert.NotNull(ex);
@@ -239,14 +237,14 @@ namespace AssignTeams.Core.UnitTests
         public void GeneratesExceptionWhenNumberOfTeamsIsZeroForRequestByNumberOfTeams()
         {
             // Arrange
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
             {
-                Associates = TestData.NineAssociates,
+                People = TestData.NinePeople,
                 RandomizeBy = RandomizeBy.TotalNumberOfTeams
             };
 
             // Act
-            var ex = Record.Exception(() => _generator.Run(_params));
+            var ex = Record.Exception(() => _generator.Run(userOptions));
 
             // Assert
             Assert.NotNull(ex);
@@ -255,24 +253,24 @@ namespace AssignTeams.Core.UnitTests
         }
 
         [Fact]
-        public void GeneratesExceptionWhenNumberOfTeamsRequestedIsGreaterThanTotalAssociates()
+        public void GeneratesExceptionWhenNumberOfTeamsRequestedIsGreaterThanNumberOfPeople()
         {
             // Arrange
             int numberOfTeams = 10;
-            _params = new GeneratorParams
+            GeneratorParams userOptions = new GeneratorParams
             {
-                NumberOfTeams = numberOfTeams,
-                Associates = TestData.NineAssociates,
+                TotalNumberOfTeams = numberOfTeams,
+                People = TestData.NinePeople,
                 RandomizeBy = RandomizeBy.TotalNumberOfTeams
             };
 
             // Act
-            var ex = Record.Exception(() => _generator.Run(_params));
+            var ex = Record.Exception(() => _generator.Run(userOptions));
 
             // Assert
             Assert.NotNull(ex);
             Assert.IsType<ArgumentException>(ex);
-            Assert.Equal(ex.Message, "There are not enough team members provided for the number of teams requested.");
+            Assert.Equal(ex.Message, "There are not enough people provided for the number of teams requested.");
         }
     }
 }

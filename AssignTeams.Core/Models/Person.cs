@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AssignTeams.Core.Models
 {
-    public class Associate
+    public class Person
     {
         public string Name { get; set; }
     }
