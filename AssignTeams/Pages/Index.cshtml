@@ -7,30 +7,26 @@
 <div class="row">
     <div class="page-header col-md-6">
         <h2>Welcome to the Random Team Generator</h2>
-        <h4>
+        <h5>
             Fill out and submit the details below and this random generator engine will create your desired teams.
             This tool is helpful for team building events at your place at work when you want to shape your teams in different and random ways!
-        </h4>
+        </h5>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div class="form-group">
-                <label>Upload your List of People:</label>
-                <input type="file" />
-            </div>
-            <div class="form-group">
-                <label>Enter Number of Teams:</label>
-                <input class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Enter Maximum Size per Team:</label>
-                <input class="form-control" />
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="GeneratorParameters.TotalNumberOfTeams" class="col-form-label">Enter Desired Number of Teams</label>
+        <input asp-for="GeneratorParameters.TotalNumberOfTeams" type="text" class="form-control" id="txtNumberOfTeams">
     </div>
-</div>
+    <div class="form-group"><label>- OR -</label></div>
+    <div class="form-group">
+        <label asp-for="GeneratorParameters.MaximumPeoplePerTeam" class="col-form-label">Enter Maximum People per Team</label>
+        <input asp-for="GeneratorParameters.MaximumPeoplePerTeam" type="text" class="form-control" id="txtMaxPeoplePerTeams">
+    </div>
+    <div class="form-group">
+        <label for="fileUpload" class="col-form-label">Upload your List of People:</label>
+        <input type="file" class="form-control-file" id="fileUpload">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
