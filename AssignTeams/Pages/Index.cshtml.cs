@@ -23,6 +23,7 @@ namespace AssignTeams.Pages
 
         public IActionResult OnPost()
         {
+            List<Team> list = new List<Team>();
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -33,13 +34,16 @@ namespace AssignTeams.Pages
                 GeneratorParameters.People.Add(new Person { Name = "B" });
                 GeneratorParameters.People.Add(new Person { Name = "R" });
                 GeneratorParameters.People.Add(new Person { Name = "Colon" });
-                _generatorService.Run(GeneratorParameters);
+                list = _generatorService.Run(GeneratorParameters).ToList();
+                ViewData["teams"] = list[0];
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
+
+            //return RedirectToAction("ShowTeams", "ShowTeams");
             return RedirectToPage("./ShowTeams");
         }
     }

@@ -15,17 +15,25 @@
 </div>
 <form method="post">
     <div class="form-group">
-        <label asp-for="GeneratorParameters.TotalNumberOfTeams" class="col-form-label">Enter Desired Number of Teams</label>
-        <input asp-for="GeneratorParameters.TotalNumberOfTeams" type="text" class="form-control" id="txtNumberOfTeams">
-    </div>
-    <div class="form-group"><label>- OR -</label></div>
-    <div class="form-group">
-        <label asp-for="GeneratorParameters.MaximumPeoplePerTeam" class="col-form-label">Enter Maximum People per Team</label>
-        <input asp-for="GeneratorParameters.MaximumPeoplePerTeam" type="text" class="form-control" id="txtMaxPeoplePerTeams">
-    </div>
-    <div class="form-group">
         <label for="fileUpload" class="col-form-label">Upload your List of People:</label>
         <input type="file" class="form-control-file" id="fileUpload">
+    </div>
+    <div class="form-group">
+        <label class="col-form-label">Select one of the following:</label>
+    </div>
+    <div class="radio">
+        <label class="radio col-form-label">
+            <input type="radio" name="randomizeTeamBy" id="randomizeTeamBy" value="totalNumberOfTeams" checked /> Total Number Of Teams
+        </label>
+    </div>
+    <div class="radio">
+        <label class="radio col-form-label">
+            <input type="radio" name="randomizeTeamBy" id="randomizeTeamBy" value="maxPeoplePerTeam" /> Maximum People Per Team
+        </label>
+    </div>
+    <div class="form-group">
+        <label asp-for="GeneratorParameters.TotalNumberOfTeams" class="col-form-label">Enter Desired Number</label>
+        <input asp-for="GeneratorParameters.TotalNumberOfTeams" type="text" class="form-control" id="txtNumberOfTeams">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 

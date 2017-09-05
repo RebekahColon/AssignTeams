@@ -7,8 +7,8 @@ namespace AssignTeams.Core.Models
     public class GeneratorParams
     {
         public IList<Person> People { get; set; }
-        public int TotalNumberOfTeams { get; set; }
-        public int MaximumPeoplePerTeam { get; set; }
+        public int TotalNumberOfTeams { get; set; } 
+        public int? MaximumPeoplePerTeam { get; set; }
         public RandomizeBy RandomizeBy { get; set; }
 
         public GeneratorParams()
